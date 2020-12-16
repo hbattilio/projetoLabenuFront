@@ -19,23 +19,29 @@ import { baseUrl } from '../../constants/urls'
 
 const SignUpPage = () => {
 
-    const [username, setUsername] = useState("")
+    const [name, setName] = useState("")
+    const [nickname, setNickname] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const history = useHistory()
 
     useEffect(() => {
-    if(localStorage.getItem("token") !== null){
-        history.push("/feedimgpage")
-    }
-}, [])
+        if (window.localStorage.getItem("token")) {
+            alert("Usuario logado, Redirecionado")
+            history.push("/feedimgpage")
+        }
+    }, [])
 
-    const handleUsernameChange = (event) => {
-        const newUsername = event.target.value;
-        setUsername(newUsername)
+    const handleNameChange = (event) => {
+        const newName = event.target.value;
+        setName(newName)
     }
-    
-    const handleEmailChange = (event) =>  {
+    const handleNicknameChange = (event) => {
+        const newNickname = event.target.value;
+        setNickname(newNickname)
+    }
+
+    const handleEmailChange = (event) => {
         const newEmail = event.target.value;
         setEmail(newEmail)
     }
@@ -45,93 +51,114 @@ const SignUpPage = () => {
         setPassword(newPassword)
     }
 
-    const handleSignup = async (event) => {
-        event.preventDefalt();
+    const signUp = async (event) => {
+
+        event.preventDefault()
 
         const body = {
+            name: name,
             email: email,
+            nickname: nickname,
             password: password,
-            username: username,
+            
         }
+        console.log(body)
 
-        try{
-            const reponse = await axios.post(`${baseUrl}/signup`, body);
+        try {
+            const response = await axios.post(`${baseUrl}/user/signup`, body);
 
-            localStorage.setItem("token", reponse.data.token);
-
+            window.localStorage.setItem("token", response.data.token);
+            alert("Cadastro efetuado com sucesso")
+            console.log("Cadastro efetuado com sucesso")
             history.push("/feedimgpage")
+            
 
-            }catch(error){
-                alert("Cadastro falhou, tente novamente");
-                console.error(error);
-            }
-}
+        } catch (error) {
+            alert("Cadastro falhou, tente novamente");
+            console.error(error);
+            console.log(body)
+        }
+    }
 
     const goToLoginPage = () => {
         history.push('/login')
     }
 
-    return(
+    return (
         <Container component="main" maxWidth="xs">
             <div>
-                <Typography component="h1" variant="h5">
+                <Typography component="h1" variant="h5" align="center">
                     Cadastrar !
                 </Typography>
-                <form onSubmit={handleSignup}>
-                   <TextField
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="username"
-                    label="Nome de Usuário"
-                    name="username"
-                    autoComplete="username"
-                    autoFocus
-                    onChange={handleUsernameChange}
-                    value={username}
-                   />
-                   <TextField
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="email"
-                    label="E-mail"
-                    name="email"
-                    autoComplete="email"
-                    autoFocus
-                    onChange={handleEmailChange}
-                    value={email}
-                   />
-                   <TextField
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    fullWidth
-                    name="password"
-                    label="Senha"
-                    type="password"
-                    id="password"
-                    autoComplete="current-password"
-                    onChange={handlePasswordChange}
-                    value={password}
-                   />
-                   <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                   >
-                    Entrar
+                <form onSubmit={signUp}>
+                    <TextField
+                        variant="outlined"
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="username"
+                        label="Nome de Usuário"
+                        name="username"
+                        autoComplete="username"
+                        autoFocus
+                        onChange={handleNameChange}
+                        value={name}
+                    />
+                    <TextField
+                        variant="outlined"
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="nickname"
+                        label="Apelido"
+                        name="nickname"
+                        autoComplete="nickname"
+                        autoFocus
+                        onChange={handleNicknameChange}
+                        value={nickname}
+                    />
+                    <TextField
+                        variant="outlined"
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="email"
+                        label="E-mail"
+                        name="email"
+                        autoComplete="email"
+                        autoFocus
+                        onChange={handleEmailChange}
+                        value={email}
+                    />
+                    <TextField
+                        variant="outlined"
+                        margin="normal"
+                        required
+                        fullWidth
+                        name="password"
+                        label="Senha"
+                        type="password"
+                        id="password"
+                        autoComplete="current-password"
+                        onChange={handlePasswordChange}
+                        value={password}
+                    />
+                    <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        color="primary"
+                        
+                    >
+                        Efetuar Cadastro
                    </Button>
-                   <Grid container>
+                    <Grid container>
                         <Grid item>
                             <Link href="#" onClick={goToLoginPage} variant="body1" >
                                 {"Já tem conta? Faca aqui seu Logon"}
-                            </Link>  
+                            </Link>
                         </Grid>
-                   </Grid>
+                    </Grid>
                 </form>
             </div>
         </Container>
