@@ -1,10 +1,10 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import Router from './components/routers/Router'
 
 function App() {
   return (
     <div>
-      <h1>Ola</h1>
+      <Router/>
     </div>
   );
 }
